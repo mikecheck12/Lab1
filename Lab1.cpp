@@ -7,6 +7,74 @@
 
 using namespace std;
 
+double convertGrade(vector<Grade> grades, int j) {
+	string letterGrade = grades[j].getGrade();
+	char c = letterGrade[0];
+	double gpa = 0;
+	
+	switch (c) {
+	case 'A': gpa = 4.00; break;
+	case 'B': gpa = 3.00; break;
+	case 'C': gpa = 2.00; break;
+	case 'D': gpa = 1.00; break;
+	case 'E': gpa = 0.00; break;
+	}
+
+	char d = letterGrade[1];
+	//if (c == "+" || c == "-") {
+	switch (d){
+	case '+': gpa += 0.3;
+	case '-': gpa -= 0.3;
+	}
+	//}
+	return gpa;
+}
+
+/*
+double convertGrade(vector<Grade> grades, int j) {
+	
+	double gpa;
+
+	if (grades[j].getGrade() == "A") {
+		gpa = 4.0;
+	}
+	else if (grades[j].getGrade() == "A-") {
+		gpa = 3.7;
+	}
+	else if (grades[j].getGrade() == "B+") {
+		gpa = 3.4;
+	}
+	else if (grades[j].getGrade() == "B") {
+		gpa = 3.0;
+	}
+	else if (grades[j].getGrade() == "B-") {
+		gpa = 2.7;
+	}
+	else if (grades[j].getGrade() == "C+") {
+		gpa = 2.4;
+	}
+	else if (grades[j].getGrade() == "C") {
+		gpa = 2.0;
+	}
+	else if (grades[j].getGrade() == "C-") {
+		gpa = 1.7;
+	}
+	else if (grades[j].getGrade() == "D+") {
+		gpa = 1.4;
+	}
+	else if (grades[j].getGrade() == "D") {
+		gpa = 1.0;
+	}
+	else if (grades[j].getGrade() == "D-") {
+		gpa = 0.7;
+	}
+	else if (grades[j].getGrade() == "E") {
+		gpa = 0.0;
+	}
+	return gpa;
+}
+*/
+
 void gpaCalc(vector<Student>& students, vector<Grade> grades) {
 
 	double gpa;
@@ -24,43 +92,7 @@ void gpaCalc(vector<Student>& students, vector<Grade> grades) {
 			for (int j = 0; j < grades.size(); j++) {
 
 				if (students[i].getId() == grades[j].getId()) {
-
-					if (grades[j].getGrade() == "A") {
-						gpa = 4.0;
-					}
-					else if (grades[j].getGrade() == "A-") {
-						gpa = 3.7;
-					}
-					else if (grades[j].getGrade() == "B+") {
-						gpa = 3.4;
-					}
-					else if (grades[j].getGrade() == "B") {
-						gpa = 3.0;
-					}
-					else if (grades[j].getGrade() == "B-") {
-						gpa = 2.7;
-					}
-					else if (grades[j].getGrade() == "C+") {
-						gpa = 2.4;
-					}
-					else if (grades[j].getGrade() == "C") {
-						gpa = 2.0;
-					}
-					else if (grades[j].getGrade() == "C-") {
-						gpa = 1.7;
-					}
-					else if (grades[j].getGrade() == "D+") {
-						gpa = 1.4;
-					}
-					else if (grades[j].getGrade() == "D") {
-						gpa = 1.0;
-					}
-					else if (grades[j].getGrade() == "D-") {
-						gpa = 0.7;
-					}
-					else if (grades[j].getGrade() == "E") {
-						gpa = 0.0;
-					}
+					gpa = convertGrade(grades, j);
 					counter++;
 					//cerr << "GPA" << gpa << endl;
 
@@ -79,17 +111,17 @@ void gpaCalc(vector<Student>& students, vector<Grade> grades) {
 	}
 }
 
-void outputStudents(vector<Student> students, vector<Grade> grades, vector<string> query, char* argv[]) {
+void outputStudents(vector<Student> students, vector<Grade> grades, vector<string> query){
 
 	ofstream out;
-	out.open(argv[4]);
+	out.open("output.txt");
 	
 //Student output
-		for (auto students : students) {
-			out << students.getName() << endl;
-			out << students.getId() << endl;
-			out << students.getPhone() << endl;
-			out << students.getAddress() << endl;
+		for (Student s : students) {
+			out << s.getName() << endl;
+			out << s.getId() << endl;
+			out << s.getPhone() << endl;
+			out << s.getAddress() << endl;
 		}
 	out << endl;
 //Grade output
@@ -110,8 +142,8 @@ void outputStudents(vector<Student> students, vector<Grade> grades, vector<strin
 		}
 }
 
-int main(int argc, char* argv[]){
-//int main(){
+//int main(int argc, char* argv[]){
+int main(){
 
 	vector<Student> students;
 	vector<Grade> grades;
@@ -127,7 +159,7 @@ int main(int argc, char* argv[]){
 
 //Open and retrieve studenet info
 	ifstream in;
-	in.open(argv[1]);
+	in.open("Student.txt");
 	
 	while (getline(in, id)) {
 		getline(in, name);
@@ -146,7 +178,7 @@ int main(int argc, char* argv[]){
 
 //Open and retrieve grade info
 	
-	in.open(argv[2]);
+	in.open("Grade.txt");
 
 	while (getline(in, courseId)) {
 		getline(in, id);
@@ -168,7 +200,7 @@ int main(int argc, char* argv[]){
 	
 //Open and retrieve query info
 	
-	in.open(argv[3]);
+	in.open("Query.txt");
 
 	while (getline(in, id)) {
 		query.push_back(id);
@@ -177,7 +209,7 @@ int main(int argc, char* argv[]){
 
 //Output Grades to File
 	
-	outputStudents(students, grades, query, argv);
+	outputStudents(students, grades, query);
 
 	return 0;
 }
